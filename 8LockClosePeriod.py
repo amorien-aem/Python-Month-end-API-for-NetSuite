@@ -1,0 +1,67 @@
+import pandas as pd
+import jupyterlab_server as caas
+import tkinter as tk
+from pretty_html_table import build_table
+from tkinter import ttk
+
+#from itables import init_notebook_mode
+#init_notebook_mode(all_interactive=True)
+
+# Main application
+root = tk.Tk()
+root.title("Month-End Checklist")
+root.geometry("300x400")
+
+def update_progress():
+    total_tasks = len(tasks)
+    completed_tasks = sum(var.get() for var in task_vars)
+    percentage = round((completed_tasks / total_tasks) * 100)
+    progress_label.config(text=f"Progress: {percentage}%")
+
+def create_scrollable_checklist(root, items):
+    # Create a canvas and a scrollbar
+    canvas = tk.Canvas(root)
+    scrollbar = ttk.Scrollbar(root, orient="vertical", command=canvas.yview)
+    scrollable_frame = ttk.Frame(canvas)
+   
+    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+# Create a frame for the checklist
+frame = ttk.Frame(root, padding=10)
+frame.pack(fill=tk.BOTH, expand=True)
+  # Configure the canvas
+
+
+    # Add checkboxes to the scrollable frame
+
+
+# Title
+title_label = ttk.Label(frame, text="8 Lock & Close Period", font=("Arial", 16))
+title_label.pack(pady=10)
+
+# Month End Close Checklist Data
+tasks =  [
+        "Verify all tasks (A/R, A/P, Inventory, GL) are marked as Complete",
+        "Lock the Period for all users except Finance/Admin",
+        "Once reconciliations are done, Close the Period",
+        "Set up Period Close Checklist Tasks for workflow control"
+    ]
+   # "Assigned To": ["" for _ in range(36)],
+   # "Due Date": ["" for _ in range(36)],
+   # "Completed (Y/N)": ["" for _ in range(36)]
+
+task_vars = []
+
+for task in tasks:
+    var = tk.IntVar()
+    task_vars.append(var)
+    checkbox = ttk.Checkbutton(frame, text=task, variable=var, command=update_progress)
+    checkbox.pack(anchor=tk.W, pady=5)
+
+# Progress label
+progress_label = ttk.Label(frame, text="Progress: 0%", font=("Arial", 12))
+progress_label.pack(pady=20)
+
+# Run the application
+root.mainloop()
