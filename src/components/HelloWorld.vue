@@ -112,6 +112,7 @@ function executeMonthEnd() {
 
 function startExecution() {
   showConfirm.value = false
+  showConfirm.value = false
   if (es) return
   const filesParam = scripts.value.join(',')
   const q = apiKey.value ? `&api_key=${encodeURIComponent(apiKey.value)}` : ''

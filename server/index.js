@@ -88,6 +88,7 @@ app.get('/view-script', (req, res) => {
   res.send(`<!doctype html><html><head><meta charset="utf-8"><title>${name}</title><link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet"/></head><body><pre><code class="language-python">${escaped}</code></pre><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script></body></html>`)
 })
 
+
 // Return run logs
 app.get('/api/logs', (req, res) => {
   const logsFile = path.resolve(__dirname, '..', 'output', 'logs.json')
