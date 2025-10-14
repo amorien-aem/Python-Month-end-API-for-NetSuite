@@ -18,8 +18,11 @@ if (fs.existsSync(publicDir)) app.use(express.static(publicDir))
 
 // Respond to GET / with the repo's index.html if it exists (helps Codespaces/GitHub.dev URLs)
 app.get('/', (req, res) => {
-  if (fs.existsSync(repoIndex)) return res.sendFile(repoIndex)
+  console.log('GET / requested')
+  console.log('repoIndex', repoIndex, 'exists?', fs.existsSync(repoIndex))
   const alt = path.join(publicDir, 'index.html')
+  console.log('public/index.html', alt, 'exists?', fs.existsSync(alt))
+  if (fs.existsSync(repoIndex)) return res.sendFile(repoIndex)
   if (fs.existsSync(alt)) return res.sendFile(alt)
   res.send('API server is running. Use /api/* endpoints.')
 })

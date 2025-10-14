@@ -1,0 +1,5 @@
+item,completed
+"Verify all tasks (A/R, A/P, Inventory, GL) are marked as Complete",
+Lock the Period for all users except Finance/Admin,
+"Once reconciliations are done, Close the Period",
+Set up Period Close Checklist Tasks for workflow control,
