@@ -11,6 +11,19 @@ const __dirname = path.dirname(__filename)
 const app = express()
 app.use(express.json())
 
+// Serve static files from the project's `public` directory (and fall back to repo root index.html)
+const publicDir = path.resolve(__dirname, '..', 'public')
+const repoIndex = path.resolve(__dirname, '..', 'index.html')
+if (fs.existsSync(publicDir)) app.use(express.static(publicDir))
+
+// Respond to GET / with the repo's index.html if it exists (helps Codespaces/GitHub.dev URLs)
+app.get('/', (req, res) => {
+  if (fs.existsSync(repoIndex)) return res.sendFile(repoIndex)
+  const alt = path.join(publicDir, 'index.html')
+  if (fs.existsSync(alt)) return res.sendFile(alt)
+  res.send('API server is running. Use /api/* endpoints.')
+})
+
 // Simple API key middleware (use API_KEY env var)
 app.use((req, res, next) => {
   const key = process.env.API_KEY
