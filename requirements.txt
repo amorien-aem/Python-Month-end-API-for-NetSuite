@@ -1,0 +1,3 @@
+pandas
+pretty_html_table
+jupyterlab_server

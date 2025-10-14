@@ -1,5 +1,30 @@
+import os
+import sys
 import pandas as pd
 import jupyterlab_server as caas
+
+if os.environ.get('HEADLESS'):
+    tasks = [
+        "Ensure all vendor bills are entered and approved",
+        "Post all vendor payments and match to bills",
+        "Review A/P Aging Report for overdue bills",
+        "Accrue expenses for received but unbilled goods/services",
+        "Review Prepaid Expenses schedules and post amortization",
+    ]
+    import json, os
+    os.makedirs('output', exist_ok=True)
+    out = {'script':'3AccountsPayable.py','summary':f'{len(tasks)} checklist items','items':tasks}
+    with open(os.path.join('output','3AccountsPayable.json'),'w') as f:
+        json.dump(out, f)
+    import csv
+    with open(os.path.join('output','3AccountsPayable.csv'),'w', newline='') as cf:
+        w = csv.writer(cf)
+        w.writerow(['item','completed'])
+        for t in tasks:
+            w.writerow([t,''])
+    print(f"3AccountsPayable.py: HEADLESS summary written to output/3AccountsPayable.json and CSV")
+    sys.exit(0)
+
 import tkinter as tk
 from pretty_html_table import build_table
 from tkinter import ttk

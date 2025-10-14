@@ -1,5 +1,33 @@
+import os
+import sys
 import pandas as pd
 import jupyterlab_server as caas
+
+# If running in headless mode (server), skip GUI initialization
+if os.environ.get('HEADLESS'):
+    # Provide a small headless summary instead of launching the GUI
+    tasks = [
+        "Ensure all transactions are entered and approved",
+        "Verify Intercompany transactions are posted and balanced",
+        "Check for unposted payroll journal entries",
+        "Validate all Inventory Adjustments & Transfers are recorded",
+        "Ensure Fixed Assets Depreciation is run",
+    ]
+    import json, os
+    os.makedirs('output', exist_ok=True)
+    out = {'script':'1preliminary.py','summary':f'{len(tasks)} checklist items','items':tasks}
+    with open(os.path.join('output','1preliminary.json'),'w') as f:
+        json.dump(out, f)
+    # also write CSV
+    import csv
+    with open(os.path.join('output','1preliminary.csv'),'w', newline='') as cf:
+        w = csv.writer(cf)
+        w.writerow(['item','completed'])
+        for t in tasks:
+            w.writerow([t,''])
+    print(f"1preliminary.py: HEADLESS summary written to output/1preliminary.json and CSV")
+    sys.exit(0)
+
 import tkinter as tk
 from pretty_html_table import build_table
 from tkinter import ttk

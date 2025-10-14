@@ -1,5 +1,29 @@
+import os
+import sys
 import pandas as pd
 import jupyterlab_server as caas
+
+if os.environ.get('HEADLESS'):
+    tasks = [
+        "Verify all tasks (A/R, A/P, Inventory, GL) are marked as Complete",
+        "Lock the Period for all users except Finance/Admin",
+        "Once reconciliations are done, Close the Period",
+        "Set up Period Close Checklist Tasks for workflow control",
+    ]
+    import json, os
+    os.makedirs('output', exist_ok=True)
+    out = {'script':'8LockClosePeriod.py','summary':f'{len(tasks)} checklist items','items':tasks}
+    with open(os.path.join('output','8LockClosePeriod.json'),'w') as f:
+        json.dump(out, f)
+    import csv
+    with open(os.path.join('output','8LockClosePeriod.csv'),'w', newline='') as cf:
+        w = csv.writer(cf)
+        w.writerow(['item','completed'])
+        for t in tasks:
+            w.writerow([t,''])
+    print(f"8LockClosePeriod.py: HEADLESS summary written to output/8LockClosePeriod.json and CSV")
+    sys.exit(0)
+
 import tkinter as tk
 from pretty_html_table import build_table
 from tkinter import ttk

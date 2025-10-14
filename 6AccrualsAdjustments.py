@@ -1,5 +1,29 @@
+import os
+import sys
 import pandas as pd
 import jupyterlab_server as caas
+
+if os.environ.get('HEADLESS'):
+    tasks = [
+        "Post Journal Entries for Accruals",
+        "Review Open Purchase Orders for potential accruals",
+        "Adjust Intercompany Eliminations",
+        "Post any Manual Adjustments",
+    ]
+    import json, os
+    os.makedirs('output', exist_ok=True)
+    out = {'script':'6AccrualsAdjustments.py','summary':f'{len(tasks)} checklist items','items':tasks}
+    with open(os.path.join('output','6AccrualsAdjustments.json'),'w') as f:
+        json.dump(out, f)
+    import csv
+    with open(os.path.join('output','6AccrualsAdjustments.csv'),'w', newline='') as cf:
+        w = csv.writer(cf)
+        w.writerow(['item','completed'])
+        for t in tasks:
+            w.writerow([t,''])
+    print(f"6AccrualsAdjustments.py: HEADLESS summary written to output/6AccrualsAdjustments.json and CSV")
+    sys.exit(0)
+
 import tkinter as tk
 from pretty_html_table import build_table
 from tkinter import ttk

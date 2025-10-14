@@ -1,5 +1,30 @@
+import os
+import sys
 import pandas as pd
 import jupyterlab_server as caas
+
+if os.environ.get('HEADLESS'):
+    tasks = [
+        "Complete all Inventory Counts / Cycle Counts",
+        "Post Inventory Adjustments",
+        "Reconcile Inventory Valuation Report with GL",
+        "Review Work In Process (WIP) balances",
+        "Process Landed Costs allocations if needed",
+    ]
+    import json, os
+    os.makedirs('output', exist_ok=True)
+    out = {'script':'5Inventory.py','summary':f'{len(tasks)} checklist items','items':tasks}
+    with open(os.path.join('output','5Inventory.json'),'w') as f:
+        json.dump(out, f)
+    import csv
+    with open(os.path.join('output','5Inventory.csv'),'w', newline='') as cf:
+        w = csv.writer(cf)
+        w.writerow(['item','completed'])
+        for t in tasks:
+            w.writerow([t,''])
+    print(f"5Inventory.py: HEADLESS summary written to output/5Inventory.json and CSV")
+    sys.exit(0)
+
 import tkinter as tk
 from pretty_html_table import build_table
 from tkinter import ttk

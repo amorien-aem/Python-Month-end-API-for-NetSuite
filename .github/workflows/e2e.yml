@@ -1,0 +1,36 @@
+name: E2E tests
+
+on:
+  push:
+    paths:
+      - 'tests/e2e.spec.js'
+      - 'server/**'
+      - 'tests/**'
+  pull_request:
+    paths:
+      - 'tests/e2e.spec.js'
+      - 'server/**'
+      - 'tests/**'
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    name: Run end-to-end tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      - name: Run E2E test
+        env:
+          CI: true
+        run: |
+          npx vitest tests/e2e.spec.js --run --reporter dot
