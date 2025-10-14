@@ -10,7 +10,9 @@
     "test": "vitest",
     "server": "node server/index.js",
     "start": "node server/index.js",
-    "dev:all": "concurrently \"npm:dev\" \"npm:server\" --names vite,api -c red,blue"
+    "dev:all": "concurrently \"npm:dev\" \"npm:server\" --names vite,api -c red,blue",
+    "validate": "npm test && ./scripts/py-validate.sh",
+    "build-and-start": "npm run validate && npm run build && npm start"
   },
   "dependencies": {
     "express": "^5.1.0",

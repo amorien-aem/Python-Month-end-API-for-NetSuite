@@ -1,0 +1,9 @@
+node_modules
+dist
+.vscode
+.git
+.venv
+npm-debug.log
+.DS_Store
+.env
+output

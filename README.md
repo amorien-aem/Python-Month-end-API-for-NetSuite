@@ -122,3 +122,45 @@ When running under `HEADLESS=1` (set by the server), each script writes:
 - If you see a Tkinter error (no $DISPLAY), ensure you run via the server (it sets `HEADLESS=1`) or run under Xvfb.
 - If some imports are missing, activate the venv and `pip install` the missing modules.
 
+
+## Build & Run (automated)
+
+There are convenience scripts to validate, build and run the project:
+
+- Run tests + Python syntax checks:
+
+	npm run validate
+
+- Build the frontend (Vite) for production:
+
+	npm run build
+
+- Start the API server (serves `dist/` when present):
+
+	npm start
+
+- Validate, build and start in one step:
+
+	npm run build-and-start
+
+- Run Vite dev server and API server together for development:
+
+	npm run dev:all
+
+	## Containerization
+
+	Build the Docker image and run the container (binds port 3000):
+
+	```bash
+	docker build -t month-end-api:latest .
+	docker run --rm -p 3000:3000 -v $(pwd)/output:/app/output month-end-api:latest
+	```
+
+	Or use docker-compose:
+
+	```bash
+	docker-compose up --build
+	```
+
+	The container runs the Node server in production mode and serves the compiled `dist/` assets.
+

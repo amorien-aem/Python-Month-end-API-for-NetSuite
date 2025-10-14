@@ -16,16 +16,34 @@ const publicDir = path.resolve(__dirname, '..', 'public')
 const repoIndex = path.resolve(__dirname, '..', 'index.html')
 if (fs.existsSync(publicDir)) app.use(express.static(publicDir))
 
+// If a production build exists, serve it (must be preferred over repo index)
+const distDir = path.resolve(__dirname, '..', 'dist')
+if (fs.existsSync(distDir)) {
+  app.use(express.static(distDir))
+}
+
 // Respond to GET / with the repo's index.html if it exists (helps Codespaces/GitHub.dev URLs)
 app.get('/', (req, res) => {
-  console.log('GET / requested')
-  console.log('repoIndex', repoIndex, 'exists?', fs.existsSync(repoIndex))
+  // Prefer dist/index.html (production build) if it exists
+  const distIndex = path.join(distDir, 'index.html')
   const alt = path.join(publicDir, 'index.html')
-  console.log('public/index.html', alt, 'exists?', fs.existsSync(alt))
+  if (fs.existsSync(distIndex)) return res.sendFile(distIndex)
+  // serve top-level index.html, then public/index.html
   if (fs.existsSync(repoIndex)) return res.sendFile(repoIndex)
   if (fs.existsSync(alt)) return res.sendFile(alt)
   res.send('API server is running. Use /api/* endpoints.')
 })
+
+// Serve production build (Vite) if present
+// SPA fallback middleware: serve dist/index.html for non-API routes (only active if dist exists)
+if (fs.existsSync(distDir)) {
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/view-script') || req.path.startsWith('/socket')) return next()
+    const indexFile = path.join(distDir, 'index.html')
+    if (fs.existsSync(indexFile)) return res.sendFile(indexFile)
+    next()
+  })
+}
 
 // Simple API key middleware (use API_KEY env var)
 app.use((req, res, next) => {
@@ -187,4 +205,4 @@ app.get('/api/stream-execute', (req, res) => {
 
 const port = process.env.PORT || 3000
 // bind to 0.0.0.0 so ports are reachable from the host/container environment
-app.listen(port, '0.0.0.0', () => console.log(`API server listening on http://0.0.0.0:${port}`))
+app.listen(port, '0.0.0.0', () => console.info(`API server listening on http://0.0.0.0:${port}`))
