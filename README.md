@@ -147,6 +147,28 @@ There are convenience scripts to validate, build and run the project:
 
 	npm run dev:all
 
+	## Deploy to Render
+
+	This repo includes a `Dockerfile` and a `render.yaml` manifest so you can deploy to Render using the Docker runtime.
+
+	Steps:
+
+	1. Push your code to GitHub and ensure `main` is up to date.
+	2. Go to https://render.com and create a new Web Service.
+	3. Connect your GitHub repo `amorien-aem/Python-Month-end-API-for-NetSuite`.
+	4. Choose 'Docker' as the environment and make sure the Dockerfile path is `Dockerfile` (root).
+	5. Set the build and start commands (the Dockerfile already runs `node server/index.js`).
+	6. Add environment variables (Render UI):
+		- PORT = 3000
+		- API_KEY = (optional) a secret used by the server to require API access
+
+	Render will build and deploy automatically from the `main` branch. Alternatively, if you use the `render.yaml` manifest file, Render will pick up the configuration automatically when connecting the repository.
+
+	Troubleshooting:
+	- Check Render build logs if the Docker build fails (large dependency installs are the usual cause).
+	- Ensure the Python dependencies in `requirements.txt` are accurate if the orchestrator runs on the server.
+	- If the service fails to start, check `server/index.js` is able to bind to the `PORT` provided by Render (we use 0.0.0.0:PORT by default).
+
 	## Containerization
 
 	Build the Docker image and run the container (binds port 3000):

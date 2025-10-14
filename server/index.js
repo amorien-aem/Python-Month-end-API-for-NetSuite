@@ -206,4 +206,12 @@ app.get('/api/stream-execute', (req, res) => {
 
 const port = process.env.PORT || 3000
 // bind to 0.0.0.0 so ports are reachable from the host/container environment
-app.listen(port, '0.0.0.0', () => console.info(`API server listening on http://0.0.0.0:${port}`))
+app.listen(port, '0.0.0.0', () => {
+  // Minimal startup log
+  console.log(`API server listening on port ${port}`)
+})
+
+// Health endpoint for readiness checks
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() })
+})
